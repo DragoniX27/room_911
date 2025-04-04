@@ -66,4 +66,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function department(){
+        return $this->belongsTo('App\Models\Department', 'department_id', 'id');
+    }
+
+    public function login_atemps(){
+        return $this->hasMany('App\Models\Login_attempt', 'user_id');
+    }
 }

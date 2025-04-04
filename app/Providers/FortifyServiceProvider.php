@@ -13,6 +13,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use App\Actions\Fortify\LoginValidation;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Fortify\Contracts\LoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -21,7 +23,20 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+            public function toResponse($request)
+            {
+                $user = Auth::user();
+                if ($user) {
+                    if ($user->hasRole('admin_room_911')) {
+                        return redirect()->route('dashboard');
+                    } elseif ($user->hasRole('worker')) {
+                        return redirect()->route('worker.home');
+                    }
+                }
+                return redirect()->route('welcome');
+            }
+        });
     }
 
     /**

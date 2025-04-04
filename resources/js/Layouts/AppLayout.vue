@@ -1,4 +1,4 @@
-<script setup>
+<script>
 import { ref } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
@@ -7,24 +7,43 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import Loading from 'vue-loading-overlay';
+import loadingState from '@/loadingState.js';
+import { defineComponent } from "vue"
 
-defineProps({
-    title: String,
+export default defineComponent({
+    components: {
+        ref,
+        Head,
+        Link,
+        router,
+        ApplicationMark,
+        Banner,
+        Dropdown,
+        DropdownLink,
+        NavLink,
+        ResponsiveNavLink,
+        Loading,
+    },
+    data() {
+        return {
+            showingNavigationDropdown: ref(false)
+        }
+    },
+    computed: {
+        loadingState() {
+            return loadingState;
+        }
+    },
+    props:{
+        title: String,
+    },
+    methods: {
+        logout(){
+            router.post(route('logout'));
+        }
+    },
 });
-
-const showingNavigationDropdown = ref(false);
-
-const switchToTeam = (team) => {
-    router.put(route('current-team.update'), {
-        team_id: team.id,
-    }, {
-        preserveState: false,
-    });
-};
-
-const logout = () => {
-    router.post(route('logout'));
-};
 </script>
 
 <template>
@@ -50,6 +69,10 @@ const logout = () => {
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                                <NavLink :href="route('users.index')"
+                                    :active="route().current('users.index')">
+                                    Users
                                 </NavLink>
                             </div>
                         </div>
@@ -194,6 +217,9 @@ const logout = () => {
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.index')">
+                            Users
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -279,7 +305,7 @@ const logout = () => {
                     <slot name="header" />
                 </div>
             </header>
-
+            <loading :active.sync="loadingState.isLoading" :is-full-page="true" :lock-scroll="true"/>
             <!-- Page Content -->
             <main>
                 <slot />

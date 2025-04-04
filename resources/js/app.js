@@ -1,5 +1,8 @@
 import './bootstrap';
 import '../css/app.css';
+import AppLayout from './Layouts/AppLayout.vue';
+import loadingPlugin from './Plugins/loadingPlugin';
+import 'vue-loading-overlay/dist/css/index.css';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -15,6 +18,8 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(loadingPlugin)
+            .component('AppLayout',AppLayout)
             .mount(el);
     },
     progress: {
