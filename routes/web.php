@@ -37,4 +37,10 @@ Route::middleware([
             Route::post('/import', 'import')->name('import');
         });
     });
+
+    Route::group(['middleware' => ['role:worker']], function () {
+        Route::get('/worker', function () {
+            return Inertia::render('Welcome');
+        })->name('worker.home');
+    });
 });
