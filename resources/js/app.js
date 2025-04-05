@@ -4,6 +4,7 @@ import AppLayout from './Layouts/AppLayout.vue';
 import loadingPlugin from './Plugins/loadingPlugin';
 import 'vue-loading-overlay/dist/css/index.css';
 
+
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';

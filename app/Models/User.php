@@ -31,6 +31,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'department_id',
+        'status'
     ];
 
     /**
@@ -71,7 +74,7 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Department', 'department_id', 'id');
     }
 
-    public function login_atemps(){
+    public function login_attempts(){
         return $this->hasMany('App\Models\Login_attempt', 'user_id');
     }
 }

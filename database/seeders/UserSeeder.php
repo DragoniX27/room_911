@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'Santiago Giraldo',
             'email' => 'santiagogil271@gmail.com',
             'password' => Hash::make('12345'),
-            'phone' => '+57 (302) 371-8033',
+            'phone' => '(302) 371-8033',
             'status' => 'active',
             'department_id' => 1
         ])->assignRole('admin_room_911');
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'name' => 'Santiago Worker',
             'email' => 'work@gmail.com',
             'password' => Hash::make('12345'),
-            'phone' => '+57 (302) 371-8034',
+            'phone' => '(302) 371-8034',
             'status' => 'active',
             'department_id' => 1
         ])->assignRole('worker');

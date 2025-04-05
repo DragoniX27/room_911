@@ -26,7 +26,15 @@ Route::middleware([
         //Routes to manage users
         Route::controller(\App\Http\Controllers\UsersController::class)->prefix('users')->name('users.')->group(function(){
             Route::get('/', 'index')->name('index');
+            Route::post('/search', 'search')->name('search');
             Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/edit/{user}', 'edit')->name('edit');
+            Route::post('/update', 'update')->name('update');
+            Route::post('/block/{user}', 'block')->name('block');
+            Route::post('/destroy/{user}', 'destroy')->name('destroy');
+            Route::get('/users/{user}/pdf', 'attemptsPdf')->name('pdf');
+            Route::post('/import', 'import')->name('import');
         });
     });
 });

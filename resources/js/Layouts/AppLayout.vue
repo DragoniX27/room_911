@@ -1,6 +1,6 @@
 <script>
-import { ref } from 'vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -9,9 +9,19 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import Loading from 'vue-loading-overlay';
 import loadingState from '@/loadingState.js';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 import { defineComponent } from "vue"
 
 export default defineComponent({
+    setup(){
+        const page = usePage();
+        onMounted(() => {
+            if (page.props.flash.message) {
+                toast(page.props.flash.message, { type: page.props.flash.status, "autoClose": 3000});
+            }
+        });
+    },
     components: {
         ref,
         Head,
