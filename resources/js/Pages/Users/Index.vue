@@ -16,15 +16,21 @@ export default defineComponent({
       type: Object,
       required: false,
     },
+    departments: {
+        type: Object,
+        required: false,
+    }
   },
   data() {
     return {
       mod_users: this.users,
       showModal: ref(false),
       form: this.$inertia.form({
+        user_code: "",
         name: "",
         email: "",
         phone: "",
+        department_id: ""
       }),
     };
   },
@@ -142,7 +148,7 @@ export default defineComponent({
                         </thead>
                         <tbody>
                             <tr v-for="(item, u) in mod_users" :key="u">
-                                <td >{{ item.id }}</td>
+                                <td >{{ item.user_code }}</td>
                                 <td>{{ item.name}}</td>
                                 <td>{{ item.email}}</td>
                                 <td>{{ item.phone}}</td>
@@ -176,9 +182,18 @@ export default defineComponent({
                 Search user
             </template>
             <template #content>
-                <form @submit.prevent="searchUser" class="space-y-4">
+                <form @submit.prevent="searchUser" class="space-y-4 flex grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="mt-4">
+                        <label for="user_code" class="block text-sm font-medium text-gray-700">Id</label>
+                        <input
+                          id="user_code"
+                          type="text"
+                          v-model="form.user_code"
+                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                        />
+                    </div>
                   <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">name</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                     <input
                       id="name"
                       type="text"
@@ -187,7 +202,7 @@ export default defineComponent({
                     />
                   </div>
                   <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">email</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                     <input
                       id="email"
                       type="email"
@@ -196,7 +211,7 @@ export default defineComponent({
                     />
                   </div>
                   <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700">phone</label>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
                     <input
                       id="phone"
                       type="text"
@@ -204,6 +219,21 @@ export default defineComponent({
                       @input="formatAsPhoneNumber"
                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                     />
+                  </div>
+                  <div class="col-span-2">
+                    <label for="department" class="block text-sm font-medium text-gray-700"
+                      >Department</label
+                    >
+                    <select
+                      id="department"
+                      name="department"
+                      v-model="form.department_id"
+                      class="block w-full px-4 py-2 border border-gray-300 bg-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <template v-for="(department, d) in departments" :key="d">
+                        <option :value="department.id">{{ department.name }}</option>
+                      </template>
+                    </select>
                   </div>
                 </form>
             </template>

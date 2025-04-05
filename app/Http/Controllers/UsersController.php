@@ -24,26 +24,36 @@ class UsersController extends Controller
             $query->where('status', 'success');
         }])->take(50)->get();
 
-        return Inertia::render('Users/Index', ['users' => $users]);
+        $departments = Department::all();
+
+        return Inertia::render('Users/Index', ['users' => $users, 'departments' => $departments]);
     }
 
     /**
      * Function to search for a user
      */
     public function search(Request $request){
-        $users = User::where(function($query) use ($request) {
-            $query->when($request->input('form.name'), function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->input('form.name') . '%');
-            })->when($request->input('form.phone'), function ($q) use ($request) {
-                $q->orWhere('phone', 'like', '%' . $request->input('form.phone') . '%');
-            })->when($request->input('form.email'), function ($q) use ($request) {
-                $q->orWhere('email', 'like', '%' . $request->input('form.email') . '%');
+        $users = User::when($request->input('form.user_code'), function ($query) use ($request) {
+            $query->where('user_code', $request->input('form.user_code'));
+        }, function ($query) use ($request) {
+            $query->where(function($q) use ($request) {
+                $q->when($request->input('form.name'), function ($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->input('form.name') . '%');
+                })->when($request->input('form.phone'), function ($q) use ($request) {
+                    $q->orWhere('phone', 'like', '%' . $request->input('form.phone') . '%');
+                })->when($request->input('form.email'), function ($q) use ($request) {
+                    $q->orWhere('email', 'like', '%' . $request->input('form.email') . '%');
+                })->when($request->input('form.department_id'), function ($q) use ($request) {
+                    $q->orWhere('department_id', $request->input('form.department_id'));
+                });
             });
         })
-        ->with('roles','department')
-        ->withCount(['login_attempts' => function($query){
+        ->with('roles', 'department')
+        ->withCount(['login_attempts' => function ($query) {
             $query->where('status', 'success');
-        }])->take(50)->get();
+        }])
+        ->take(50)
+        ->get();
 
         return response()->json([ 'users' => $users]);
     }
@@ -109,7 +119,12 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load('roles', 'login_attempts');
+        $user->load([
+            'roles',
+            'login_attempts' => function ($query) {
+                $query->latest()->limit(100);
+            }
+        ]);
         $departments = Department::all();
         $roles = Roles::all();
 

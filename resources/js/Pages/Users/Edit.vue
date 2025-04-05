@@ -1,10 +1,15 @@
 <script>
 import ValidationErrors from "@/Components/ValidationErrors.vue";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+import { toast } from 'vue3-toastify';
 import { defineComponent } from "vue";
+import axios from "axios";
 
 export default defineComponent({
   components: {
     ValidationErrors,
+    VueDatePicker
   },
   props: {
     roles: {
@@ -29,6 +34,8 @@ export default defineComponent({
       }),
       role: "",
       id: 0,
+      attempts: [],
+      dateRange: null
     };
   },
   methods: {
@@ -45,8 +52,23 @@ export default defineComponent({
         this.form.phone = `(${num}`;
       }
     },
+    //Function to filter attempts between 2 dates
+    filterAtemps(range){
+        if (range && range.length === 2 && range[0] && range[1]) {
+            this.$showLoading()
+            let [start, end] = range;
+
+            axios.post(route('attemps.search'),{'start': start.toISOString().slice(0, 10), 'end': end.toISOString().slice(0, 10), 'user_id': this.user.id}).then(res => {
+                this.attempts = res.data.attempts
+                this.$hideLoading()
+            });
+
+        }else{
+            toast('select 2 dates to filter', { type: 'warning', "autoClose": 3000})
+        }
+    },
     formatDate(dateStr){
-        const date = new Date(dateStr)
+        let date = new Date(dateStr)
         return date.toLocaleString()
     },
     submit() {
@@ -76,17 +98,18 @@ export default defineComponent({
     this.form.department_id = this.user.department_id
     this.form.status = this.user.status
     this.role = this.user.roles[0].name
+    this.attempts = this.user.login_attempts
   },
 });
 </script>
 <template>
   <AppLayout title="Update User">
-    <div class="bg-gray-100 mt-5 flex items-center justify-center">
+    <div class="bg-gray-100 mt-5 flex justify-center gap-x-4 items-stretch">
       <form
         class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg space-y-3"
         @submit.prevent="submit"
       >
-        <h2 class="text-2xl font-bold text-gray-800 text-center">Update User</h2>
+        <h2 class="text-2xl font-bold text-gray-800 text-center">Update User #{{user.user_code}}</h2>
         <ValidationErrors></ValidationErrors>
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700"
@@ -184,10 +207,11 @@ export default defineComponent({
       </form>
       <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg space-y-3 ml-2">
         <h2 class="text-xl font-bold mb-4 text-gray-800">Login attempts</h2>
+        <VueDatePicker v-model="dateRange" range @update:model-value="filterAtemps"/>
         <div class="bg-white rounded-2xl shadow-md p-4 max-h-96 overflow-y-auto space-y-3 border border-gray-200">
-            <template v-if="user.login_attempts.length > 0">
+            <template v-if="attempts.length > 0">
                 <div
-                  v-for="(attempt, index) in user.login_attempts"
+                  v-for="(attempt, index) in attempts"
                   :key="index"
                   class="p-3 rounded-lg border-l-4"
                   :class="attempt.status == 'success' ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'"

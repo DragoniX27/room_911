@@ -28,6 +28,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_code',
         'name',
         'email',
         'password',
@@ -68,6 +69,27 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->user_code = self::generateEmployeeCode();
+        });
+    }
+
+    public static function generateEmployeeCode()
+    {
+        $lastCode = self::orderBy('id', 'desc')->first()?->user_code;
+
+        if ($lastCode) {
+            $lastNumber = (int) filter_var($lastCode, FILTER_SANITIZE_NUMBER_INT);
+            return str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        }
+
+        return '0001';
     }
 
     public function department(){

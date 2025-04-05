@@ -14,12 +14,12 @@ class LoginValidation
     public function __invoke(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'user_code' => 'required',
             'password' => 'required',
         ]);
 
         // Validate if the user is active
-        $user = \App\Models\User::firstWhere(['email' => $request->email, 'status' => 'active']);
+        $user = \App\Models\User::firstWhere(['user_code' => $request->user_code, 'status' => 'active']);
 
         if ($user) {
             if (Hash::check($request->password, $user->password)) {

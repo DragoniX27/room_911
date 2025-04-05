@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\login_attempt;
+use App\Models\Login_attempt;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LoginAttemptController extends Controller
@@ -13,6 +14,18 @@ class LoginAttemptController extends Controller
     public function index()
     {
         //
+    }
+
+    /**
+     * Function to search for a attemps
+     */
+    public function search(Request $request){
+        $attempts = Login_attempt::where('user_id', $request->input('user_id'))->whereBetween('created_at', [
+            $request->input('start'),
+            Carbon::parse($request->input('end'))->endOfDay()
+        ])->latest()->limit(100)->get();
+
+        return response()->json([ 'attempts' => $attempts]);
     }
 
     /**

@@ -36,6 +36,10 @@ Route::middleware([
             Route::get('/users/{user}/pdf', 'attemptsPdf')->name('pdf');
             Route::post('/import', 'import')->name('import');
         });
+        //Routes to manage login attempts
+        Route::controller(\App\Http\Controllers\LoginAttemptController::class)->prefix('attemps')->name('attemps.')->group(function(){
+            Route::post('/search', 'search')->name('search');
+        });
     });
 
     Route::group(['middleware' => ['role:worker']], function () {
