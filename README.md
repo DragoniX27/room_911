@@ -1,140 +1,42 @@
-Room_911 Project
-This project was created to complete the "room_911" workshop, fulfilling all the required functionalities.
+# Room\_911 Project
 
-It is built with Laravel Jetstream, using Inertia.js and Vue 3 on the frontend.
+This project is built to complete the **"room\_911" workshop**, implementing all required features.
 
-🛠️ Requirements
-PHP >= 8.1
+It was developed using **Laravel Jetstream with Inertia.js**, and to make it work properly, follow these steps after setting up your database:
 
-Composer
-
-Node.js >= 18
-
-NPM or Yarn
-
-MySQL or compatible database
-
-⚙️ Installation
-Clone the repository
-
-bash
-Copiar
-Editar
-git clone <your-repo-url>
-cd room_911
-Install PHP dependencies
-
-bash
-Copiar
-Editar
+```bash
 composer install
-Install JavaScript dependencies and compile assets
 
-bash
-Copiar
-Editar
 npm install && npm run dev
-Configure the .env file
-Copy the example file and update your database and other environment variables:
+```
 
-bash
-Copiar
-Editar
-cp .env.example .env
-php artisan key:generate
-Run migrations
+## 📅 Importing Users (Excel)
 
-bash
-Copiar
-Editar
-php artisan migrate
-(Optional) Seed the database
+To test the bulk user import functionality, an Excel file is included:\
+``
 
-bash
-Copiar
-Editar
-php artisan db:seed
-📥 Bulk User Import
-To test the bulk user import functionality, an example file is included:
-test_excel_room_911.xlsx
+> ⚠️ **Note:** You can modify the data in the file, but **do not change the headers**, as the system relies on them during import.
 
-You can modify the file’s content as needed, but do not change the column headers, since the import logic uses them as references.
+## 🔧 Tech Stack
 
-To perform the import:
+### Backend
 
-bash
-Copiar
-Editar
-php artisan import:users test_excel_room_911.xlsx
-(or use the UI if the import feature is integrated there)
+- Laravel
+- Jetstream
+- Sanctum
+- Spatie Laravel Permission
+- Maatwebsite Excel
+- DomPDF
+- Inertia.js (Laravel adapter)
+- Ziggy (Laravel routes in JS)
 
-📄 Features
-User Management (Create, Edit, Delete, Block)
+### Frontend
 
-Role & Department Assignment
+- Vue 3
+- Inertia.js
+- TailwindCSS
+- Vite
+- Axios
+- vue-loading-overlay
+- vue3-toastify
 
-Login Attempt Tracking
-
-Bulk User Import with Excel (Laravel Excel + Spatie)
-
-PDF Export (if enabled)
-
-Jetstream UI Components with Tailwind CSS
-
-Dynamic Form Validations
-
-📦 Packages Used
-Laravel Jetstream
-
-Inertia.js
-
-Vue 3
-
-Tailwind CSS
-
-Laravel Excel
-
-Spatie Laravel Permission
-
-🧩 Project Dependencies
-Laravel (Composer)
-This project uses the following key PHP dependencies:
-
-laravel/framework – Laravel core framework
-
-laravel/jetstream – Authentication scaffolding with Inertia.js and Vue 3
-
-inertiajs/inertia-laravel – Inertia adapter for Laravel
-
-spatie/laravel-permission – Role and permission management
-
-maatwebsite/excel – Excel import/export support
-
-barryvdh/laravel-dompdf – PDF generation
-
-tightenco/ziggy – Laravel named routes in JavaScript
-
-laravel/sanctum – API token authentication
-
-Node.js (package.json)
-Frontend dependencies include:
-
-Vue 3 – JavaScript framework
-
-@inertiajs/vue3 – Vue 3 support for Inertia
-
-tailwindcss – Utility-first CSS framework
-
-@tailwindcss/forms – Better default styles for forms
-
-@tailwindcss/typography – Rich content formatting
-
-vue-loading-overlay – Loading spinners
-
-vue3-toastify – Toast notifications
-
-axios – HTTP client
-
-vite – Frontend bundler
-
-laravel-vite-plugin – Laravel + Vite integration
